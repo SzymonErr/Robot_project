@@ -4,15 +4,38 @@ class Navigation:
     def __init__(self, given_map):
         self.used_map = given_map
         self.cords = list()
+        self.scanningDirection = "___"
 
     def startNavigation(self):
         row = int(input("Input start cords (row): "))
         column = int(input("Input start cords (column): "))
         self.used_map[row][column] = "_up"
+        self.scanningDirection = "_up"
         #printMap(self.used_map)
         self.cords.append(row)
         self.cords.append(column)
         return
+
+    def checkCollision(self):
+        Collision = False
+        obstacleMap = readMapFromFile("obstacleMap")
+        if self.used_map[self.cords[0]][self.cords[1]] == "_up":
+            if obstacleMap[self.cords[0] - 1][self.cords[1]] == "1.0":
+                Collision = True
+                self.used_map[self.cords[0] - 1][self.cords[1]] = 1.0
+        elif self.used_map[self.cords[0]][self.cords[1]] == "_ri":
+            if obstacleMap[self.cords[0]][self.cords[1] + 1] == "1.0":
+                Collision = True
+                self.used_map[self.cords[0]][self.cords[1] + 1] = 1.0
+        elif self.used_map[self.cords[0]][self.cords[1]] == "_do":
+            if obstacleMap[self.cords[0] + 1][self.cords[1]] == "1.0":
+                Collision = True
+                self.used_map[self.cords[0] + 1][self.cords[1]] = 1.0
+        elif self.used_map[self.cords[0]][self.cords[1]] == "_le":
+            if obstacleMap[self.cords[0]][self.cords[1] - 1] == "1.0":
+                Collision = True
+                self.used_map[self.cords[0]][self.cords[1] - 1] = 1.0
+        return Collision
 
     def moveStraight(self):
         if self.used_map[self.cords[0]][self.cords[1]] == "_up":
@@ -37,6 +60,7 @@ class Navigation:
         return
 
     def rotateLeft(self):
+        self.rotateScannerLeft()
         if self.used_map[self.cords[0]][self.cords[1]] == "_up":
             self.used_map[self.cords[0]][self.cords[1]] = "_le"
         elif self.used_map[self.cords[0]][self.cords[1]] == "_ri":
@@ -51,6 +75,7 @@ class Navigation:
         return
 
     def rotateRight(self):
+        self.rotateScannerRight()
         if self.used_map[self.cords[0]][self.cords[1]] == "_up":
             self.used_map[self.cords[0]][self.cords[1]] = "_ri"
         elif self.used_map[self.cords[0]][self.cords[1]] == "_ri":
@@ -64,8 +89,73 @@ class Navigation:
         #printMap(self.used_map)
         return
 
+#Scanner rotations
+    def rotateScannerLeft(self):
+        if self.scanningDirection == "_up":
+            self.scanningDirection = "_le"
+        elif self.scanningDirection == "_le":
+            self.scanningDirection = "_do"
+        elif self.scanningDirection == "_do":
+            self.scanningDirection = "_ri"
+        elif self.scanningDirection == "_ri":
+            self.scanningDirection = "_up"
+        else:
+            print("Incorrect scanning direction")
+        return
+
+    def rotateScannerRight(self):
+        if self.scanningDirection == "_up":
+            self.scanningDirection = "_ri"
+        elif self.scanningDirection == "_ri":
+            self.scanningDirection = "_do"
+        elif self.scanningDirection == "_do":
+            self.scanningDirection = "_le"
+        elif self.scanningDirection == "_le":
+            self.scanningDirection = "_up"
+        else:
+            print("Incorrect scanning direction")
+        return
+
+#Scan methods
+    def scan_input(self):
+        return int(input("Input scan result (in cm): "))
+
+    def scan_obstacleMap(self):
+        obstacleMap = readMapFromFile("obstacleMap")
+        printMap(obstacleMap)
+        obstacleDetected = False
+        blockCounter = 0
+        block = 0
+        while(obstacleDetected == False):
+            block += 1
+            blockCounter += 1
+            #print("self.cords[0] = ", self.cords[0])
+            #print("self.cords[1] = ", self.cords[1])
+            if self.used_map[self.cords[0]][self.cords[1]] == "_up":
+                #print("self.cords[1] = ", self.cords[1])
+                #print("self.cords[0]-block = ", self.cords[0]-block)
+                #print("obstacleMap[self.cords[0]-block][self.cords[1]] = ", obstacleMap[self.cords[0]-block][self.cords[1]])
+                if obstacleMap[self.cords[0]-block][self.cords[1]] == "1.0":
+                    obstacleDetected = True
+            elif self.used_map[self.cords[0]][self.cords[1]] == "_ri":
+                if obstacleMap[self.cords[0]][self.cords[1]+block] == "1.0":
+                    obstacleDetected = True
+            elif self.used_map[self.cords[0]][self.cords[1]] == "_do":
+                if obstacleMap[self.cords[0]+block][self.cords[1]] == "1.0":
+                    obstacleDetected = True
+            elif self.used_map[self.cords[0]][self.cords[1]] == "_le":
+                if obstacleMap[self.cords[0]][self.cords[1]-block] == "1.0":
+                    obstacleDetected = True
+            else:
+                print("Something went wrong, incorrect cords")
+        return (blockCounter - 1)*10
+
     def scanRoom(self):
-        record = int(input("Input scan result (in cm): "))
+
+        #Choose scanning method: scan_input() / scan_obstacleMap() / scan_
+        #record = self.scan_input()
+        record = self.scan_obstacleMap()
+        print("record: ", record)
         blocks = int(record)//10
         print(blocks)
         for block in range(blocks):
@@ -111,8 +201,25 @@ class Navigation:
         print("6 - Print current cords")
         print("7 - Load map")
         print("8 - Scan room")
+        print("9 - Run algorithm")
         print("0 - Finish navigation")
         print("help - print this menu")
+
+    def algorithm(self):
+        continueAlgorithm = True
+        counter = 0
+        limit = 80
+        while (continueAlgorithm == True):
+            if (self.checkCollision() == False):
+                self.moveStraight()
+            else:
+                for directions in range(3):
+                    self.rotateLeft()
+                    self.scanRoom()
+            counter += 1
+            if (counter >= limit):
+                continueAlgorithm = False
+        return
 
     def navigationMenu(self):
         self.printNavigationMenu()
@@ -122,11 +229,17 @@ class Navigation:
             if option == "1":
                 self.startNavigation()
             elif option == "2":
-                self.moveStraight()
+                if(False == self.checkCollision()):
+                    self.moveStraight()
+                else:
+                    print("Collision! Cannot move straight!")
+                printMap(self.used_map)
             elif option == "3":
                 self.rotateLeft()
+                printMap(self.used_map)
             elif option == "4":
                 self.rotateRight()
+                printMap(self.used_map)
             elif option == "5":
                 printMap(self.used_map)
             elif option == "6":
@@ -136,8 +249,11 @@ class Navigation:
                 self.used_map = readMapFromFile(filename)
             elif option == "8":
                 self.scanRoom()
+            elif option == "9":
+                self.algorithm()
             elif option == "0":
                 continue_loop = False
+                writeMapToFile("temp", self.used_map)
                 print("Navigation closed. Bye!")
             elif option.lower() == "help":
                 self.printNavigationMenu()
