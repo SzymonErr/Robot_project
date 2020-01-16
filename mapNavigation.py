@@ -206,22 +206,6 @@ class Navigation:
         print("0 - Finish navigation")
         print("help - print this menu")
 
-    def algorithm(self):
-        continueAlgorithm = True
-        counter = 0
-        limit = 80
-        while (continueAlgorithm == True):
-            if (self.checkCollision() == False):
-                self.moveStraight()
-            else:
-                for directions in range(3):
-                    self.rotateLeft()
-                    self.scanRoom()
-            counter += 1
-            if (counter >= limit):
-                continueAlgorithm = False
-        return
-
     def navigationMenu(self):
         self.printNavigationMenu()
         continue_loop = True
@@ -251,7 +235,7 @@ class Navigation:
             elif option == "8":
                 self.scanRoom()
             elif option == "9":
-                self = algorithm_v2(self)
+                self = algorithm(self)
             elif option == "r":
                 self.rotateScannerRight()
             elif option == "t":
