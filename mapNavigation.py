@@ -1,11 +1,14 @@
 from map_reader import *
 from algorithm import *
 
+#FIELD_SIZE = 10
+
 class Navigation:
     def __init__(self, given_map):
         self.used_map = given_map
         self.cords = list()
         self.scanningDirection = "___"
+        FIELD_SIZE = 10
 
     def startNavigation(self):
         row = int(input("Input start cords (row): "))
@@ -147,7 +150,7 @@ class Navigation:
                     obstacleDetected = True
             else:
                 print("Something went wrong, incorrect cords")
-        return (blockCounter - 1)*10
+        return (blockCounter - 1)*FIELD_SIZE
 
     def scanRoom(self):
 
@@ -155,7 +158,7 @@ class Navigation:
         #record = self.scan_input()
         record = self.scan_obstacleMap()
         print("record: ", record)
-        blocks = int(record)//10
+        blocks = int(record)//FIELD_SIZE
         print(blocks)
         for block in range(blocks):
             print("Block: ", block)
@@ -188,7 +191,7 @@ class Navigation:
         else:
             print("Something went wrong, incorrect cords")
         # printMap(self.used_map)
-        return
+        return record
 
     def printNavigationMenu(self):
         print("Navigation menu:")
@@ -235,7 +238,7 @@ class Navigation:
             elif option == "8":
                 self.scanRoom()
             elif option == "9":
-                self = algorithm(self)
+                self = algorithm_v2(self)
             elif option == "r":
                 self.rotateScannerRight()
             elif option == "t":

@@ -24,6 +24,14 @@ def v2_rotate(nav):
         nav.rotateScannerRight()
         return nav
 
+def v2_obtuseAngleMovement(nav, range):
+    if (range >= Navigation.FIELD_SIZE):
+        nav.rotateRight()
+        nav. faceRobotStraight()
+        nav.rotateScannerRight()
+        nav.moveStraight()
+    return
+
 def algorithm_v2(nav):
     continueAlgorithm = True
     counter = 0
@@ -31,7 +39,8 @@ def algorithm_v2(nav):
     while (continueAlgorithm == True):
         if (nav.checkCollision() == False):
             nav.moveStraight()
-            nav.scanRoom()
+            range = nav.scanRoom()
+            v2_obtuseAngleMovement(nav, range)
         else:
             nav = v2_rotate(nav)
         counter += 1
