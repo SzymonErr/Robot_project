@@ -1,4 +1,5 @@
 from map_reader import *
+from algorithm import *
 
 class Navigation:
     def __init__(self, given_map):
@@ -250,7 +251,7 @@ class Navigation:
             elif option == "8":
                 self.scanRoom()
             elif option == "9":
-                self.algorithm()
+                self = algorithm_v2(self)
             elif option == "r":
                 self.rotateScannerRight()
             elif option == "t":
@@ -263,3 +264,11 @@ class Navigation:
                 self.printNavigationMenu()
             writeMapToFile("map2", self.used_map)
         return
+
+    #support function
+    def faceRobotStraight(self):
+        self.scanningDirection = self.used_map[self.cords[0]][self.cords[1]]
+        print("ScanningDirection = ", self.scanningDirection)
+        print("MovingDirection = ", self.used_map[self.cords[0]][self.cords[1]])
+        return
+
