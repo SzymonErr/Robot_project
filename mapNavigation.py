@@ -131,19 +131,17 @@ class Navigation:
             blockCounter += 1
             #print("self.cords[0] = ", self.cords[0])
             #print("self.cords[1] = ", self.cords[1])
-            if self.used_map[self.cords[0]][self.cords[1]] == "_up":
-                #print("self.cords[1] = ", self.cords[1])
-                #print("self.cords[0]-block = ", self.cords[0]-block)
-                #print("obstacleMap[self.cords[0]-block][self.cords[1]] = ", obstacleMap[self.cords[0]-block][self.cords[1]])
+
+            if self.scanningDirection == "_up":
                 if obstacleMap[self.cords[0]-block][self.cords[1]] == "1.0":
                     obstacleDetected = True
-            elif self.used_map[self.cords[0]][self.cords[1]] == "_ri":
+            elif self.scanningDirection == "_ri":
                 if obstacleMap[self.cords[0]][self.cords[1]+block] == "1.0":
                     obstacleDetected = True
-            elif self.used_map[self.cords[0]][self.cords[1]] == "_do":
+            elif self.scanningDirection == "_do":
                 if obstacleMap[self.cords[0]+block][self.cords[1]] == "1.0":
                     obstacleDetected = True
-            elif self.used_map[self.cords[0]][self.cords[1]] == "_le":
+            elif self.scanningDirection == "_le":
                 if obstacleMap[self.cords[0]][self.cords[1]-block] == "1.0":
                     obstacleDetected = True
             else:
@@ -160,30 +158,30 @@ class Navigation:
         print(blocks)
         for block in range(blocks):
             print("Block: ", block)
-            if self.used_map[self.cords[0]][self.cords[1]] == "_up":
+            if self.scanningDirection == "_up":
                 #self.cords[0] -= 1
                 self.used_map[self.cords[0]-(block+1)][self.cords[1]] = 0.0
-            elif self.used_map[self.cords[0]][self.cords[1]] == "_ri":
+            elif self.scanningDirection == "_ri":
                 #self.cords[1] += 1
                 self.used_map[self.cords[0]][self.cords[1]+(block+1)] = 0.0
-            elif self.used_map[self.cords[0]][self.cords[1]] == "_do":
+            elif self.scanningDirection == "_do":
                 #self.cords[0] += 1
                 self.used_map[self.cords[0]+(block+1)][self.cords[1]] = 0.0
-            elif self.used_map[self.cords[0]][self.cords[1]] == "_le":
+            elif self.scanningDirection == "_le":
                 #self.cords[1] -= 1
                 self.used_map[self.cords[0]][self.cords[1]-(block+1)] = 0.0
             else:
                 print("Something went wrong, incorrect cords")
-        if self.used_map[self.cords[0]][self.cords[1]] == "_up":
+        if self.scanningDirection == "_up":
             #self.cords[0] -= 1
             self.used_map[self.cords[0]-(blocks+1)][self.cords[1]] = 1.0
-        elif self.used_map[self.cords[0]][self.cords[1]] == "_ri":
+        elif self.scanningDirection == "_ri":
             #self.cords[1] += 1
             self.used_map[self.cords[0]][self.cords[1]+(blocks+1)] = 1.0
-        elif self.used_map[self.cords[0]][self.cords[1]] == "_do":
+        elif self.scanningDirection == "_do":
             #self.cords[0] += 1
             self.used_map[self.cords[0]+(blocks+1)][self.cords[1]] = 1.0
-        elif self.used_map[self.cords[0]][self.cords[1]] == "_le":
+        elif self.scanningDirection == "_le":
             #self.cords[1] -= 1
             self.used_map[self.cords[0]][self.cords[1]-(blocks+1)] = 1.0
         else:
@@ -202,6 +200,8 @@ class Navigation:
         print("7 - Load map")
         print("8 - Scan room")
         print("9 - Run algorithm")
+        print("r - Rotate scanner right")
+        print("t - Rotate scanner left")
         print("0 - Finish navigation")
         print("help - print this menu")
 
@@ -251,6 +251,10 @@ class Navigation:
                 self.scanRoom()
             elif option == "9":
                 self.algorithm()
+            elif option == "r":
+                self.rotateScannerRight()
+            elif option == "t":
+                self.rotateScannerLeft()
             elif option == "0":
                 continue_loop = False
                 writeMapToFile("temp", self.used_map)
