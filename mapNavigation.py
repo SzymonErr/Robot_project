@@ -1,14 +1,15 @@
 from map_reader import *
 from algorithm import *
+from images_experiments import test
 
 #FIELD_SIZE = 10
 
 class Navigation:
+    FIELD_SIZE = 10
     def __init__(self, given_map):
         self.used_map = given_map
         self.cords = list()
         self.scanningDirection = "___"
-        FIELD_SIZE = 10
 
     def startNavigation(self):
         row = int(input("Input start cords (row): "))
@@ -126,7 +127,7 @@ class Navigation:
 
     def scan_obstacleMap(self):
         obstacleMap = readMapFromFile("obstacleMap")
-        printMap(obstacleMap)
+        #printMap(obstacleMap)
         obstacleDetected = False
         blockCounter = 0
         block = 0
@@ -150,18 +151,18 @@ class Navigation:
                     obstacleDetected = True
             else:
                 print("Something went wrong, incorrect cords")
-        return (blockCounter - 1)*FIELD_SIZE
+        return (blockCounter - 1)*Navigation.FIELD_SIZE
 
     def scanRoom(self):
 
         #Choose scanning method: scan_input() / scan_obstacleMap() / scan_
         #record = self.scan_input()
         record = self.scan_obstacleMap()
-        print("record: ", record)
-        blocks = int(record)//FIELD_SIZE
-        print(blocks)
+        #print("record: ", record)
+        blocks = int(record)//Navigation.FIELD_SIZE
+        #print(blocks)
         for block in range(blocks):
-            print("Block: ", block)
+            #print("Block: ", block)
             if self.scanningDirection == "_up":
                 #self.cords[0] -= 1
                 self.used_map[self.cords[0]-(block+1)][self.cords[1]] = 0.0

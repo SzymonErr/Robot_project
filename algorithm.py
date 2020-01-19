@@ -1,5 +1,7 @@
 from mapNavigation import *
 
+FIELD_SIZE = 10
+
 def algorithm(nav):
     continueAlgorithm = True
     counter = 0
@@ -17,6 +19,7 @@ def algorithm(nav):
     return nav
 
 def v2_rotate(nav):
+    print("v2_rotate")
     if (nav.checkCollision() == True):
         nav.rotateLeft()
         nav.faceRobotStraight()
@@ -25,17 +28,24 @@ def v2_rotate(nav):
         return nav
 
 def v2_obtuseAngleMovement(nav, range):
-    if (range >= Navigation.FIELD_SIZE):
+    print("v2_obtuseAngleMovement: ", range)
+    if (range >= (2*FIELD_SIZE)):
         nav.rotateRight()
-        nav. faceRobotStraight()
+        nav.faceRobotStraight()
         nav.rotateScannerRight()
+        nav.moveStraight()
+    return
+
+def findNearestWall(nav):
+    while(nav.checkCollision() == False):
         nav.moveStraight()
     return
 
 def algorithm_v2(nav):
     continueAlgorithm = True
     counter = 0
-    limit = 30
+    limit = 25
+    findNearestWall(nav)
     while (continueAlgorithm == True):
         if (nav.checkCollision() == False):
             nav.moveStraight()
