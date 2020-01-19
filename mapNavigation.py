@@ -1,15 +1,33 @@
 from map_reader import *
 from algorithm import *
 from images_experiments import test
+import RPi.GPIO as GPIO
+import time
+from Moving.AlphaBot import AlphaBot
 
 #FIELD_SIZE = 10
 
 class Navigation:
+
+    # robot section
+    #robot = AlphaBot()
+    IR = 18
+    PWM = 24
+    n = 0
+
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setwarnings(False)
+    GPIO.setup(IR, GPIO.IN, GPIO.PUD_UP)
+    # end robot section
+
     FIELD_SIZE = 10
     def __init__(self, given_map):
         self.used_map = given_map
         self.cords = list()
         self.scanningDirection = "___"
+        self.robot = AlphaBot()
+        self.robot.setPWMA(Navigation.PWM)
+        self.robot.setPWMB(Navigation.PWM)
 
     def startNavigation(self):
         row = int(input("Input start cords (row): "))
@@ -62,6 +80,8 @@ class Navigation:
         else:
             print("Something went wrong, incorrect cords")
         #printMap(self.used_map)
+        self.robot.forward()
+        time.sleep(1)
         return
 
     def rotateLeft(self):
@@ -77,6 +97,8 @@ class Navigation:
         else:
             print("Something went wrong, incorrect cords")
         #printMap(self.used_map)
+        self.robot.left()
+        time.sleep(1)
         return
 
     def rotateRight(self):
@@ -92,6 +114,8 @@ class Navigation:
         else:
             print("Something went wrong, incorrect cords")
         #printMap(self.used_map)
+        self.robot.right()
+        time.sleep(1)
         return
 
 #Scanner rotations
@@ -213,6 +237,7 @@ class Navigation:
     def navigationMenu(self):
         self.printNavigationMenu()
         continue_loop = True
+        self.robot.stop()
         while continue_loop == True:
             option = str(input("What to do?: "))
             if option == "1":
@@ -251,6 +276,7 @@ class Navigation:
             elif option.lower() == "help":
                 self.printNavigationMenu()
             writeMapToFile("map2", self.used_map)
+            self.robot.stop()
         return
 
     #support function

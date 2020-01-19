@@ -1,4 +1,5 @@
 from mapNavigation import *
+import time
 
 FIELD_SIZE = 10
 
@@ -56,6 +57,8 @@ def algorithm_v2(nav):
         counter += 1
         if (counter >= limit):
             continueAlgorithm = False
+        nav.robot.stop()
+        time.sleep(1)
     return nav
 
 
