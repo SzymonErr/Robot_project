@@ -57,4 +57,3 @@ range = float(laser_dist / float(alfa * (maxLoc[0] - 320)/ogniskowa))
 print("range: ", abs(range)/10)
 cv2.imshow("Imidz", image)
 cv2.waitKey()
-return range

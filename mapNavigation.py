@@ -3,7 +3,7 @@ from algorithm import *
 from images_experiments import test
 import RPi.GPIO as GPIO
 import time
-from Moving.AlphaBot import AlphaBot
+from Moving.AlphaBot import AlphaBot, Encoder
 
 #FIELD_SIZE = 10
 
@@ -12,13 +12,16 @@ class Navigation:
     # robot section
     #robot = AlphaBot()
     IR = 18
-    PWM = 24
+    PWM = 30
     n = 0
 
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
     GPIO.setup(IR, GPIO.IN, GPIO.PUD_UP)
     # end robot section
+
+    ce0 = Encoder(8)
+    ce1 = Encoder(7)
 
     FIELD_SIZE = 10
     def __init__(self, given_map):
@@ -82,6 +85,7 @@ class Navigation:
         #printMap(self.used_map)
         self.robot.forward()
         time.sleep(1)
+        self.robot.stop()
         return
 
     def rotateLeft(self):
@@ -99,6 +103,7 @@ class Navigation:
         #printMap(self.used_map)
         self.robot.left()
         time.sleep(1)
+        self.robot.stop()
         return
 
     def rotateRight(self):
@@ -116,6 +121,7 @@ class Navigation:
         #printMap(self.used_map)
         self.robot.right()
         time.sleep(1)
+        self.robot.stop()
         return
 
 #Scanner rotations
@@ -273,10 +279,11 @@ class Navigation:
                 continue_loop = False
                 writeMapToFile("temp", self.used_map)
                 print("Navigation closed. Bye!")
+                #GPIO.cleanup()
             elif option.lower() == "help":
                 self.printNavigationMenu()
             writeMapToFile("map2", self.used_map)
-            self.robot.stop()
+            print("Ce0: {}, Ce1: {}".format(Navigation.ce0.value, Navigation.ce1.value))
         return
 
     #support function
