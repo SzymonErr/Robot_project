@@ -42,15 +42,46 @@ R_speed = -0.25
 r.value = (L_speed, R_speed)
 #r.forward()
 
+ce0_prev_error = 0
+ce1_prev_error = 0
+
+ce0_sum_error = 0
+ce1_sum_error = 0
+
 con = 0
 
 while True:
 
-    print("Enc1: ", ce0.encoder.value)
+    ce0_error = TARGET - ce0.value
+    ce1_error = TARGET - ce1.value
+
+    L_speed += (ce0_error * KP) + (ce0_prev_error * KD) + (ce0_sum_error * KI)
+    R_speed += (ce1_error * KP) + (ce1_prev_error * KD) + (ce1_sum_error * KI)
+
+    L_speed = max(min(1, L_speed), 0)
+    R_speed = max(min(1, R_speed), 0)
+    r.value = (L_speed, R_speed)
+
     print("ce0(L): {} ce1(P): {}".format(ce0.value, ce1.value))
-    con += 1
+    print("L_speed: {} R_speed: {}".format(L_speed, R_speed))
+
+    ce0.reset()
+    ce1.reset()
+
     sleep(SAMPLETIME)
 
+    ce0_prev_error = ce0_error
+    ce1_prev_error = ce1_error
+
+    ce0_sum_error += ce0_error
+    ce1_sum_error += ce1_error
+
+    #print("Enc1: ", ce0.encoder.value)
+    #print("ce0(L): {} ce1(P): {}".format(ce0.value, ce1.value))
+    #con += 1
+    #sleep(SAMPLETIME)
+
 print("Finito: ce0(L): {} ce1(P): {}".format(ce0.value, ce1.value))
+print("Finito: L_speed: {} R_speed: {}".format(L_speed, R_speed))
 
 
