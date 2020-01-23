@@ -20,9 +20,10 @@ class Encoder(object):
     def value(self):
         return self._value
 
-SAMPLETIME = 0.2
-TARGET = 35
-KP = 0.02
+SAMPLETIME = 0.3
+max_speed = 1
+TARGET = 45
+KP = 0.03
 KI = 0.005
 KD = 0.01
 
@@ -37,8 +38,8 @@ r = Robot(left=(12, 13, 6), right=(21, 20, 26))
 #r.setPWMA(40)
 #r.setPWMB(40)
 
-L_speed = 0.25
-R_speed = -0.25
+L_speed = max_speed
+R_speed = max_speed
 r.value = (L_speed, R_speed)
 #r.forward()
 
@@ -48,22 +49,28 @@ ce1_prev_error = 0
 ce0_sum_error = 0
 ce1_sum_error = 0
 
+ce0_sum_count = 0
+ce1_sum_count = 0
+
 con = 0
 
-while True:
+while (ce0_sum_count < 200):
 
     ce0_error = TARGET - ce0.value
     ce1_error = TARGET - ce1.value
 
-    L_speed += (ce0_error * KP) + (ce0_prev_error * KD) + (ce0_sum_error * KI)
-    R_speed += (ce1_error * KP) + (ce1_prev_error * KD) + (ce1_sum_error * KI)
+    R_speed += (ce0_error * KP) + (ce0_prev_error * KD) + (ce0_sum_error * KI)
+    L_speed += (ce1_error * KP) + (ce1_prev_error * KD) + (ce1_sum_error * KI)
 
-    L_speed = max(min(1, L_speed), 0)
-    R_speed = max(min(1, R_speed), 0)
+    L_speed = max(min(max_speed, L_speed), 0)
+    R_speed = max(min(max_speed, R_speed), 0)
     r.value = (L_speed, R_speed)
 
     print("ce0(L): {} ce1(P): {}".format(ce0.value, ce1.value))
     print("L_speed: {} R_speed: {}".format(L_speed, R_speed))
+
+    ce0_sum_count += ce0.value
+    ce1_sum_count += ce1.value
 
     ce0.reset()
     ce1.reset()
