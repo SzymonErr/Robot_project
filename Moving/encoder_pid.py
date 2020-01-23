@@ -7,7 +7,7 @@ class Encoder(object):
 
         self.encoder = DigitalInputDevice(pin)
         self.encoder.when_activated = self._increment
-        #self.encoder.when_deactivated = self._increment
+        self.encoder.when_deactivated = self._increment
         print("Enc: ", self.encoder.value)
 
     def reset(self):
@@ -54,7 +54,7 @@ ce1_sum_count = 0
 
 con = 0
 
-while (ce0_sum_count < 200):
+while (ce0_sum_count < 40):
 
     ce0_error = TARGET - ce0.value
     ce1_error = TARGET - ce1.value

@@ -1,4 +1,4 @@
-from mapNavigation import *
+from mapNavigation_woRobot import *
 import time
 
 FIELD_SIZE = 10
@@ -45,7 +45,7 @@ def findNearestWall(nav):
 def algorithm_v2(nav):
     continueAlgorithm = True
     counter = 0
-    limit = 25
+    limit = 30
     findNearestWall(nav)
     while (continueAlgorithm == True):
         if (nav.checkCollision() == False):
@@ -57,8 +57,8 @@ def algorithm_v2(nav):
         counter += 1
         if (counter >= limit):
             continueAlgorithm = False
-        nav.robot.stop()
-        time.sleep(1)
+        #nav.robot.stop()
+        #time.sleep(1)
     return nav
 
 
