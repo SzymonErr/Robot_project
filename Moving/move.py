@@ -13,6 +13,8 @@ class robotMovement(object):
         self.KP = 0.06
         self.KI = 0.015
         self.KD = 0.03
+        self.forwardTicks = 50
+        self.rotateTicks = 15
         self.ce0_sum_error = 0
         self.ce1_sum_error = 0
         self.ce0_sum_count = 0
@@ -66,7 +68,7 @@ class robotMovement(object):
         self.ce0.reset()
         self.ce1.reset()
 
-    def forward(self, ticks):
+    def forward(self):
         print("Driving forward!")
         ce0_prev_error = 0
         ce1_prev_error = 0
@@ -75,7 +77,7 @@ class robotMovement(object):
         L_speed = self.max_speed
         R_speed = self.max_speed
 
-        while (ce0_sum < ticks and ce1_sum < ticks):
+        while (ce0_sum < self.forwardTicks and ce1_sum < self.forwardTicks):
             ce0_error = self.TARGET - self.ce0.value
             ce1_error = self.TARGET - self.ce1.value
 
@@ -106,18 +108,18 @@ class robotMovement(object):
         self.setRobotValue(0.0, 0.0)
         self.resetEncoders()
 
-    def left(self, ticks):
+    def left(self):
         print("Driving left!")
         self.resetEncoders()
-        while (self.ce0.value < ticks and self.ce1.value < ticks):
+        while (self.ce0.value < self.rotateTicks and self.ce1.value < self.rotateTicks):
             self.robot.value = (-0.25, 0.25)
         self.setRobotValue(0.0, 0.0)
         self.countGlobalSum()
 
-    def right(self, ticks):
+    def right(self):
         print("Driving right!")
         self.resetEncoders()
-        while (self.ce0.value < ticks and self.ce1.value < ticks):
+        while (self.ce0.value < self.rotateTicks and self.ce1.value < self.rotateTicks):
             self.robot.value = (0.25, -0.25)
         self.setRobotValue(0.0, 0.0)
         self.countGlobalSum()

@@ -4,7 +4,7 @@ import time
 
 #FIELD_SIZE = 10
 
-class Navigation2:
+class Navigation2(object):
 
     FIELD_SIZE = 20
     def __init__(self, given_map):
@@ -197,7 +197,7 @@ class Navigation2:
         else:
             print("Something went wrong, incorrect cords")
         # printMap(self.used_map)
-        return record
+        return blocks
 
     def printNavigationMenu(self):
         print("Navigation menu:")

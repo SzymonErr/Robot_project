@@ -51,9 +51,9 @@ class image_tools(object):
         image = self.prepare_image(path)
         return self.calculateDist(image)
 
-PATH = 'obrazki/pomiar_50cm.jpg'
+#PATH = 'obrazki/pomiar_50cm.jpg'
 
 #b, g, r = cv2.split(image)
 
-tool = image_tools()
-tool.analyzeImageAndReturnDist(PATH)
+#tool = image_tools()
+#tool.analyzeImageAndReturnDist(PATH)

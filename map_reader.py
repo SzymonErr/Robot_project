@@ -25,8 +25,8 @@ def writeMapToFile(filename, current_map):
             my_map.write(buffer + '\n')
     return
 
-my_map = readMapFromFile("my_first_map")
-printMap(my_map)
-my_map[2][3] = 0.0
-printMap(my_map)
-writeMapToFile("mapa_testowa", my_map)
+#my_map = readMapFromFile("my_first_map")
+#printMap(my_map)
+#my_map[2][3] = 0.0
+#printMap(my_map)
+#writeMapToFile("mapa_testowa", my_map)

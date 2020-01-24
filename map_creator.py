@@ -1,5 +1,6 @@
-def createMap(width, height, custom_value, filename):
-    file = open(filename, "w")
+def createMap(custom_value, filename):
+    width, height = getSize()
+    file = open(filename, "w+")
     for row in range(height):
         for column in range(width):
             file.write(str(custom_value) + " ")
@@ -23,7 +24,7 @@ def getSize():
     print("Width: ", width, "Height: ", height)
     return width, height
 
-width, height = getSize()
-value = inputCheck("Input value to fill map: ")
-name = input("Input file name: ")
-createMap(width, height, value, name)
+# width, height = getSize()
+# value = inputCheck("Input value to fill map: ")
+# name = input("Input file name: ")
+# createMap(width, height, value, name)
