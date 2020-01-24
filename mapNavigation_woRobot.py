@@ -6,7 +6,7 @@ import time
 
 class Navigation2:
 
-    FIELD_SIZE = 10
+    FIELD_SIZE = 20
     def __init__(self, given_map):
         self.used_map = given_map
         self.cords = list()
@@ -126,6 +126,9 @@ class Navigation2:
     def scan_input(self):
         return int(input("Input scan result (in cm): "))
 
+    def scan_arg(self, range):
+        return range
+
     def scan_obstacleMap(self):
         obstacleMap = readMapFromFile("obstacleMap")
         #printMap(obstacleMap)
@@ -154,11 +157,12 @@ class Navigation2:
                 print("Something went wrong, incorrect cords")
         return (blockCounter - 1)*Navigation2.FIELD_SIZE
 
-    def scanRoom(self):
+    def scanRoom(self, function):
 
         #Choose scanning method: scan_input() / scan_obstacleMap() / scan_
         #record = self.scan_input()
-        record = self.scan_obstacleMap()
+        #record = self.scan_obstacleMap()
+        record = function
         #print("record: ", record)
         blocks = int(record)//Navigation2.FIELD_SIZE
         #print(blocks)
@@ -238,7 +242,7 @@ class Navigation2:
                 filename = input("Input map filename: ")
                 self.used_map = readMapFromFile(filename)
             elif option == "8":
-                self.scanRoom()
+                self.scanRoom(self.scan_input())
             elif option == "9":
                 self = algorithm_v2(self)
             elif option == "r":

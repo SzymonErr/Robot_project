@@ -19,13 +19,13 @@ class Encoder(object):
     @property
     def value(self):
         return self._value
-
+'''
 SAMPLETIME = 0.3
-max_speed = 1
-TARGET = 45
-KP = 0.03
-KI = 0.005
-KD = 0.01
+max_speed = 0.4
+TARGET = 18
+KP = 0.06
+KI = 0.015
+KD = 0.03
 
 ce0 = Encoder(8)    #LEFT ENCODER
 ce1 = Encoder(7)    #RIGHT ENCODER
@@ -54,7 +54,7 @@ ce1_sum_count = 0
 
 con = 0
 
-while (ce0_sum_count < 40):
+while (ce0_sum_count < 100):
 
     ce0_error = TARGET - ce0.value
     ce1_error = TARGET - ce1.value
@@ -83,12 +83,7 @@ while (ce0_sum_count < 40):
     ce0_sum_error += ce0_error
     ce1_sum_error += ce1_error
 
-    #print("Enc1: ", ce0.encoder.value)
-    #print("ce0(L): {} ce1(P): {}".format(ce0.value, ce1.value))
-    #con += 1
-    #sleep(SAMPLETIME)
-
 print("Finito: ce0(L): {} ce1(P): {}".format(ce0.value, ce1.value))
 print("Finito: L_speed: {} R_speed: {}".format(L_speed, R_speed))
-
+'''
 

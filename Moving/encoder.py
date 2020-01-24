@@ -7,7 +7,7 @@ class Encoder(object):
 
         self.encoder = DigitalInputDevice(pin)
         self.encoder.when_activated = self._increment
-        #self.encoder.when_deactivated = self._increment
+        self.encoder.when_deactivated = self._increment
         print("Enc: ", self.encoder.value)
 
     def reset(self):
@@ -20,7 +20,7 @@ class Encoder(object):
     def value(self):
         return self._value
 
-SAMPLETIME = 0.2
+SAMPLETIME = 0.3
 TARGET = 35
 KP = 0.02
 KI = 0.005
@@ -37,8 +37,8 @@ r = Robot(left=(12, 13, 6), right=(21, 20, 26))
 #r.setPWMA(40)
 #r.setPWMB(40)
 
-L_speed = 0.25
-R_speed = -0.25
+L_speed = 0.4
+R_speed = 0.4
 r.value = (L_speed, R_speed)
 #r.forward()
 
