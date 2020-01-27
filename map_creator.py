@@ -7,14 +7,16 @@ def createMap(custom_value, filename):
         file.write("\n")
     file.close()
 
-def inputCheck(text, lowerBorder=-9999, upperBorder=9999):
+def inputCheck(text, lowerBorder=1, upperBorder=9999):
     value = input(text)
     value = float(value)
     if value < lowerBorder:
-        print("Invalid value. Please, input value greater than {}".format(lowerBorder))
+        print("Invalid value. Please, input value greater than {}"
+              .format(lowerBorder))
         value = inputCheck(text, lowerBorder, upperBorder)
     elif (value > upperBorder):
-        print("Invalid value. Please, input value lower than {}".format(upperBorder))
+        print("Invalid value. Please, input value lower than {}"
+              .format(upperBorder))
         value = inputCheck(text, lowerBorder, upperBorder)
     return value
 
@@ -25,6 +27,6 @@ def getSize():
     return width, height
 
 # width, height = getSize()
-# value = inputCheck("Input value to fill map: ")
-# name = input("Input file name: ")
-# createMap(width, height, value, name)
+value = input("Input value to fill map: ")
+name = input("Input file name: ")
+createMap(value, name)

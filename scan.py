@@ -6,7 +6,7 @@
     def scan_obstacleMap(self):
         obstacleDetected = False
         blockCounter = 0
-        block = 0;
+        block = 0
         while(obstacleDetected == False):
             block += 1
             blockCounter += 1

@@ -1,8 +1,5 @@
 from map_reader import *
 from algorithm import *
-import time
-
-#FIELD_SIZE = 10
 
 class Navigation2(object):
 
@@ -17,28 +14,33 @@ class Navigation2(object):
         column = int(input("Input start cords (column): "))
         self.used_map[row][column] = "_up"
         self.scanningDirection = "_up"
-        #printMap(self.used_map)
         self.cords.append(row)
         self.cords.append(column)
         return
 
     def checkCollision(self):
         Collision = False
-        obstacleMap = readMapFromFile("obstacleMap")
+        print("used: ")
+        printMap(self.used_map)
+        obstacleMap = self.used_map
+        print("obstacle: ")
+        print("Cords: ", self.cords)
+        print("Cords type: ", type(self.cords[0]))
+        printMap(obstacleMap)
         if self.used_map[self.cords[0]][self.cords[1]] == "_up":
-            if obstacleMap[self.cords[0] - 1][self.cords[1]] == "1.0":
+            if str(obstacleMap[self.cords[0] - 1][self.cords[1]]) == "1.0":
                 Collision = True
                 self.used_map[self.cords[0] - 1][self.cords[1]] = 1.0
         elif self.used_map[self.cords[0]][self.cords[1]] == "_ri":
-            if obstacleMap[self.cords[0]][self.cords[1] + 1] == "1.0":
+            if str(obstacleMap[self.cords[0]][self.cords[1] + 1]) == "1.0":
                 Collision = True
                 self.used_map[self.cords[0]][self.cords[1] + 1] = 1.0
         elif self.used_map[self.cords[0]][self.cords[1]] == "_do":
-            if obstacleMap[self.cords[0] + 1][self.cords[1]] == "1.0":
+            if str(obstacleMap[self.cords[0] + 1][self.cords[1]]) == "1.0":
                 Collision = True
                 self.used_map[self.cords[0] + 1][self.cords[1]] = 1.0
         elif self.used_map[self.cords[0]][self.cords[1]] == "_le":
-            if obstacleMap[self.cords[0]][self.cords[1] - 1] == "1.0":
+            if str(obstacleMap[self.cords[0]][self.cords[1] - 1]) == "1.0":
                 Collision = True
                 self.used_map[self.cords[0]][self.cords[1] - 1] = 1.0
         return Collision
@@ -62,7 +64,6 @@ class Navigation2(object):
             self.used_map[self.cords[0]][self.cords[1]] = "_le"
         else:
             print("Something went wrong, incorrect cords")
-        #printMap(self.used_map)
         return
 
     def rotateLeft(self):
@@ -77,7 +78,6 @@ class Navigation2(object):
             self.used_map[self.cords[0]][self.cords[1]] = "_do"
         else:
             print("Something went wrong, incorrect cords")
-        #printMap(self.used_map)
         return
 
     def rotateRight(self):
@@ -92,7 +92,6 @@ class Navigation2(object):
             self.used_map[self.cords[0]][self.cords[1]] = "_up"
         else:
             print("Something went wrong, incorrect cords")
-        #printMap(self.used_map)
         return
 
 #Scanner rotations
@@ -130,16 +129,13 @@ class Navigation2(object):
         return range
 
     def scan_obstacleMap(self):
-        obstacleMap = readMapFromFile("obstacleMap")
-        #printMap(obstacleMap)
+        obstacleMap = readMapFromFile("obstacleMap2.txt")
         obstacleDetected = False
         blockCounter = 0
         block = 0
         while(obstacleDetected == False):
             block += 1
             blockCounter += 1
-            #print("self.cords[0] = ", self.cords[0])
-            #print("self.cords[1] = ", self.cords[1])
 
             if self.scanningDirection == "_up":
                 if obstacleMap[self.cords[0]-block][self.cords[1]] == "1.0":
@@ -155,48 +151,35 @@ class Navigation2(object):
                     obstacleDetected = True
             else:
                 print("Something went wrong, incorrect cords")
+        print("scan_obstacleMap: ", (blockCounter - 1)*Navigation2.FIELD_SIZE)
         return (blockCounter - 1)*Navigation2.FIELD_SIZE
 
     def scanRoom(self, function):
-
-        #Choose scanning method: scan_input() / scan_obstacleMap() / scan_
-        #record = self.scan_input()
-        #record = self.scan_obstacleMap()
         record = function
-        #print("record: ", record)
         blocks = int(record)//Navigation2.FIELD_SIZE
-        #print(blocks)
+        print("scanRoom: ", blocks)
         for block in range(blocks):
             #print("Block: ", block)
             if self.scanningDirection == "_up":
-                #self.cords[0] -= 1
                 self.used_map[self.cords[0]-(block+1)][self.cords[1]] = 0.0
             elif self.scanningDirection == "_ri":
-                #self.cords[1] += 1
                 self.used_map[self.cords[0]][self.cords[1]+(block+1)] = 0.0
             elif self.scanningDirection == "_do":
-                #self.cords[0] += 1
                 self.used_map[self.cords[0]+(block+1)][self.cords[1]] = 0.0
             elif self.scanningDirection == "_le":
-                #self.cords[1] -= 1
                 self.used_map[self.cords[0]][self.cords[1]-(block+1)] = 0.0
             else:
                 print("Something went wrong, incorrect cords")
         if self.scanningDirection == "_up":
-            #self.cords[0] -= 1
             self.used_map[self.cords[0]-(blocks+1)][self.cords[1]] = 1.0
         elif self.scanningDirection == "_ri":
-            #self.cords[1] += 1
             self.used_map[self.cords[0]][self.cords[1]+(blocks+1)] = 1.0
         elif self.scanningDirection == "_do":
-            #self.cords[0] += 1
             self.used_map[self.cords[0]+(blocks+1)][self.cords[1]] = 1.0
         elif self.scanningDirection == "_le":
-            #self.cords[1] -= 1
             self.used_map[self.cords[0]][self.cords[1]-(blocks+1)] = 1.0
         else:
             print("Something went wrong, incorrect cords")
-        # printMap(self.used_map)
         return blocks
 
     def printNavigationMenu(self):
@@ -260,8 +243,9 @@ class Navigation2(object):
 
     #support function
     def faceRobotStraight(self):
-        self.scanningDirection = self.used_map[self.cords[0]][self.cords[1]]
+        self.scanningDirection = \
+            self.used_map[self.cords[0]][self.cords[1]]
         print("ScanningDirection = ", self.scanningDirection)
-        print("MovingDirection = ", self.used_map[self.cords[0]][self.cords[1]])
-        return
+        print("MovingDirection = ",
+              self.used_map[self.cords[0]][self.cords[1]])
 

@@ -1,6 +1,6 @@
 from gpiozero import DigitalInputDevice, Robot
 from time import sleep
-from encoder_pid import Encoder
+from Moving.encoder_pid import Encoder
 
 class robotMovement(object):
     def __init__(self):
@@ -19,7 +19,7 @@ class robotMovement(object):
         self.ce1_sum_error = 0
         self.ce0_sum_count = 0
         self.ce1_sum_count = 0
-        self.robot.value = (self.max_speed, self.max_speed)
+        #self.robot.value = (self.max_speed, self.max_speed)
 
     def setKI(self, value):
         self.KP = value
@@ -74,22 +74,30 @@ class robotMovement(object):
         ce1_prev_error = 0
         ce0_sum = 0
         ce1_sum = 0
+        self.resetEncoders()
         L_speed = self.max_speed
         R_speed = self.max_speed
 
-        while (ce0_sum < self.forwardTicks and ce1_sum < self.forwardTicks):
+        while (ce0_sum < self.forwardTicks
+               and ce1_sum < self.forwardTicks):
             ce0_error = self.TARGET - self.ce0.value
             ce1_error = self.TARGET - self.ce1.value
 
-            R_speed += (ce0_error * self.KP) + (ce0_prev_error * self.KD) + (self.ce0_sum_error * self.KI)
-            L_speed += (ce1_error * self.KP) + (ce1_prev_error * self.KD) + (self.ce1_sum_error * self.KI)
+            R_speed += (ce0_error * self.KP) \
+                       + (ce0_prev_error * self.KD) \
+                       + (self.ce0_sum_error * self.KI)
+            L_speed += (ce1_error * self.KP) \
+                       + (ce1_prev_error * self.KD) \
+                       + (self.ce1_sum_error * self.KI)
 
             L_speed = max(min(self.max_speed, L_speed), 0)
             R_speed = max(min(self.max_speed, R_speed), 0)
             self.robot.value = (L_speed, R_speed)
 
-            print("ce0(L): {} ce1(P): {}".format(self.ce0.value, self.ce1.value))
-            print("L_speed: {} R_speed: {}".format(L_speed, R_speed))
+            print("ce0(L): {} ce1(P): {}"
+                  .format(self.ce0.value, self.ce1.value))
+            print("L_speed: {} R_speed: {}"
+                  .format(L_speed, R_speed))
 
             ce0_sum += self.ce0.value
             ce1_sum += self.ce1.value
@@ -107,25 +115,31 @@ class robotMovement(object):
 
         self.setRobotValue(0.0, 0.0)
         self.resetEncoders()
+        sleep(1)
 
     def left(self):
         print("Driving left!")
         self.resetEncoders()
-        while (self.ce0.value < self.rotateTicks and self.ce1.value < self.rotateTicks):
+        while (self.ce0.value < self.rotateTicks
+               and self.ce1.value < self.rotateTicks):
             self.robot.value = (-0.25, 0.25)
         self.setRobotValue(0.0, 0.0)
         self.countGlobalSum()
+        sleep(1)
 
     def right(self):
         print("Driving right!")
         self.resetEncoders()
-        while (self.ce0.value < self.rotateTicks and self.ce1.value < self.rotateTicks):
+        while (self.ce0.value < self.rotateTicks
+               and self.ce1.value < self.rotateTicks):
             self.robot.value = (0.25, -0.25)
         self.setRobotValue(0.0, 0.0)
         self.countGlobalSum()
+        sleep(1)
 
     def printGlobalTicksValue(self):
-        print("Global ticks values: Left encoder: {}  Right encoder: {}".format(self.ce0_sum_count, self.ce1_sum_count))
+        print("Global ticks values: Left encoder: {}  Right encoder: {}"
+              .format(self.ce0_sum_count, self.ce1_sum_count))
 
 # robot = robotMovement()
 # for i in range(4):

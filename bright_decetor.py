@@ -1,4 +1,4 @@
-import cv2
+from cv2 import *
 import numpy as np
 import argparse
 import math
@@ -12,18 +12,21 @@ args = vars(ap.parse_args())
 class image_tools(object):
     def resize_image(self, image, width=640, heigth=480):
         dim = (width, heigth)
-        resized_image = cv2.resize(image, dim, interpolation = cv2.INTER_AREA)
+        resized_image = cv2.resize(image, dim,
+                                   interpolation=cv2.INTER_AREA)
         return resized_image
 
     def load_image(self, path):
         image = cv2.imread(path)
         return image
 
-    def calculate_range(self, maxLoc, focal_angle=55.7, laser_dist=30.0, angle=28):
+    def calculate_range(self, maxLoc, focal_angle=55.7,
+                        laser_dist=30.0, angle=28):
         tan_alpha = math.tan(angle * 3.14 / 180)
         focal = focal_angle * 3.14 / 180
         focal_px = 320 / math.tan(focal / 2)
-        distance = float(laser_dist / float(tan_alpha + (maxLoc[0] - 320) / focal_px))
+        distance = float(laser_dist / float(tan_alpha
+                                            + (maxLoc[0] - 320) / focal_px))
         return abs(distance)/10
 
     def prepare_blurred_gray(self, image, RADIUS_BLUR=3):
