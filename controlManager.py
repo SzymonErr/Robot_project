@@ -1,10 +1,10 @@
-from mapNavigation_woRobot import Navigation2
-from Moving.encoder_pid import Encoder
-from Moving.move import robotMovement
+from mapNavigation import Navigation2
+from Moving.encoder import Encoder
+from Moving.robotMovement import robotMovement
 from time import sleep
-from map_creator import *
-from map_reader import *
-from bright_decetor import image_tools
+from mapCreator import *
+from mapReader import *
+from imageAnalysis import imageAnalysis
 
 '''
 #STUBS IMPORT
@@ -16,10 +16,10 @@ class controlManager(object):
     def __init__(self):
         self.robot = robotMovement()
         self.mapName = "mapa_20.txt"
-        #createMap("0.0", self.mapName)
+        createMap("0.0", self.mapName)
         self.map = readMapFromFile(self.mapName)
         self.nav = Navigation2(self.map)
-        self.scanner = image_tools()
+        self.scanner = imageAnalysis()
         self.nav.startNavigation()
 
     def b_moveForward(self):

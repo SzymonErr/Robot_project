@@ -1,5 +1,5 @@
-from map_reader import *
-from mapNavigation_woRobot import *
+from mapReader import *
+from mapNavigation import *
 
 cords = list()
 

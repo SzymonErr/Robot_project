@@ -11,15 +11,15 @@ ap.add_argument("-i", "--image", help="path to image file")
 ap.add_argument("-r", "--radius", type = int, help = "radius of Gaussian blur; must be odd")
 args = vars(ap.parse_args())
 
-class image_tools(object):
+class imageAnalysis(object):
     numberOfPhoto = 0
     camera = PiCamera()
 
     def take_photo(self):
-        image_tools.numberOfPhoto += 1
+        imageAnalysis.numberOfPhoto += 1
         sleep(1)
-        path = '/home/pi/project/photos/photo{}.jpg'.format(image_tools.numberOfPhoto)
-        image_tools.camera.capture(path)
+        path = '/home/pi/project/photos/photo{}.jpg'.format(imageAnalysis.numberOfPhoto)
+        imageAnalysis.camera.capture(path)
         return path
 
 
@@ -60,7 +60,7 @@ class image_tools(object):
         dist = self.calculate_range(maxLoc)
         print("Distance: ", dist)
         print("MaxLoc: ", maxLoc)
-        path = '/home/pi/project/photos/photo{}.jpg'.format(image_tools.numberOfPhoto)
+        path = '/home/pi/project/photos/photo{}.jpg'.format(imageAnalysis.numberOfPhoto)
         cv2.imwrite(path, image)
         #cv2.imshow("Image: ", image)
         #cv2.waitKey()
@@ -70,11 +70,3 @@ class image_tools(object):
         path = self.take_photo()
         image = self.prepare_image(path)
         return self.calculateDist(image)
-
-#PATH = 'obrazki/pomiar_50cm.jpg'
-
-#b, g, r = cv2.split(image)
-
-tool = image_tools()
-dist = tool.analyzeImageAndReturnDist()
-print("dist")

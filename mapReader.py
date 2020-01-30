@@ -12,8 +12,6 @@ def readMapFromFile(filename):
         for rows in my_map:
             sorted_map = rows.strip().split(' ')
             read_map.append(sorted_map)
-        #print(read_map)
-        #printMap(read_map)
     return read_map
 
 def writeMapToFile(filename, current_map):

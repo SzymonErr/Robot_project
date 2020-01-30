@@ -1,4 +1,4 @@
-from mapNavigation_woRobot import *
+from mapNavigation import *
 import time
 
 FIELD_SIZE = 10
