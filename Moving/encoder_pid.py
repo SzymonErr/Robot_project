@@ -4,7 +4,6 @@ from time import sleep
 class Encoder(object):
     def __init__(self, pin):
         self._value = 0
-
         self.encoder = DigitalInputDevice(pin)
         self.encoder.when_activated = self._increment
         self.encoder.when_deactivated = self._increment
@@ -13,7 +12,7 @@ class Encoder(object):
     def reset(self):
         self._value = 0
 
-    def _increment(self):
+    #def _increment(self):
         self._value += 1
 
     @property

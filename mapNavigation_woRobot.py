@@ -3,7 +3,7 @@ from algorithm import *
 
 class Navigation2(object):
 
-    FIELD_SIZE = 20
+    FIELD_SIZE = 40
     def __init__(self, given_map):
         self.used_map = given_map
         self.cords = list()

@@ -1,5 +1,7 @@
 from cv2 import *
 import numpy as np
+from picamera import PiCamera
+from time import *
 import argparse
 import math
 
@@ -10,7 +12,18 @@ ap.add_argument("-r", "--radius", type = int, help = "radius of Gaussian blur; m
 args = vars(ap.parse_args())
 
 class image_tools(object):
-    def resize_image(self, image, width=640, heigth=480):
+    numberOfPhoto = 0
+    camera = PiCamera()
+
+    def take_photo(self):
+        image_tools.numberOfPhoto += 1
+        sleep(1)
+        path = '/home/pi/project/photos/photo{}.jpg'.format(image_tools.numberOfPhoto)
+        image_tools.camera.capture(path)
+        return path
+
+
+    def resize_image(self, image, width=1280, heigth=960):
         dim = (width, heigth)
         resized_image = cv2.resize(image, dim,
                                    interpolation=cv2.INTER_AREA)
@@ -20,13 +33,13 @@ class image_tools(object):
         image = cv2.imread(path)
         return image
 
-    def calculate_range(self, maxLoc, focal_angle=55.7,
-                        laser_dist=30.0, angle=28):
+    def calculate_range(self, maxLoc, focal_angle=30.9,
+                        laser_dist=55, angle=16.63):
         tan_alpha = math.tan(angle * 3.14 / 180)
         focal = focal_angle * 3.14 / 180
-        focal_px = 320 / math.tan(focal / 2)
+        focal_px = 640 / math.tan(focal / 2)
         distance = float(laser_dist / float(tan_alpha
-                                            + (maxLoc[0] - 320) / focal_px))
+                                            + (maxLoc[0]-640) / focal_px))
         return abs(distance)/10
 
     def prepare_blurred_gray(self, image, RADIUS_BLUR=3):
@@ -46,11 +59,15 @@ class image_tools(object):
         cv2.circle(image, maxLoc, RADIUS_DETECTION, (255, 0, 0), 2)
         dist = self.calculate_range(maxLoc)
         print("Distance: ", dist)
-        cv2.imshow("Image: ", image)
-        cv2.waitKey()
+        print("MaxLoc: ", maxLoc)
+        path = '/home/pi/project/photos/photo{}.jpg'.format(image_tools.numberOfPhoto)
+        cv2.imwrite(path, image)
+        #cv2.imshow("Image: ", image)
+        #cv2.waitKey()
         return dist
 
-    def analyzeImageAndReturnDist(self, path):
+    def analyzeImageAndReturnDist(self):
+        path = self.take_photo()
         image = self.prepare_image(path)
         return self.calculateDist(image)
 
@@ -58,5 +75,6 @@ class image_tools(object):
 
 #b, g, r = cv2.split(image)
 
-#tool = image_tools()
-#tool.analyzeImageAndReturnDist(PATH)
+tool = image_tools()
+dist = tool.analyzeImageAndReturnDist()
+print("dist")

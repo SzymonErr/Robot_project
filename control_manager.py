@@ -1,7 +1,6 @@
 from mapNavigation_woRobot import Navigation2
 from Moving.encoder_pid import Encoder
 from Moving.move import robotMovement
-from gpiozero import Servo
 from time import sleep
 from map_creator import *
 from map_reader import *
@@ -11,14 +10,12 @@ from bright_decetor import image_tools
 #STUBS IMPORT
 from stubs.encoder_stub import Encoder
 from stubs.robotMovement_stub import robotMovement
-from stubs.servo_stub import Servo
 '''
 
 class controlManager(object):
     def __init__(self):
         self.robot = robotMovement()
-        self.servo = Servo(22)
-        self.mapName = "my_map.txt"
+        self.mapName = "mapa_20.txt"
         #createMap("0.0", self.mapName)
         self.map = readMapFromFile(self.mapName)
         self.nav = Navigation2(self.map)
@@ -27,6 +24,7 @@ class controlManager(object):
 
     def b_moveForward(self):
         print("b_moveForward")
+        a = input("WAITING FOR ENTER")
         self.nav.moveStraight()
         self.robot.forward()
 
@@ -45,8 +43,7 @@ class controlManager(object):
         self.b_doScan()
         self.b_moveForward()
         self.b_doScan()
-        self.b_rotateScannerToRight()
-        ran = self.b_doScan()
+        ran = self.a_rotateAndScanToRight()
         printMap(self.nav.used_map)
         return ran
 
@@ -60,12 +57,13 @@ class controlManager(object):
     def a_performForward(self):
         print("a_performForward")
         range = 0
+        self.b_doScan()
         if(False == self.nav.checkCollision()):
             range = self.a_firstStepForward()
         #range = 0
         right = False
         while(range < 1 and (False == self.nav.checkCollision())):
-            a = input("Wait")
+            #a = input("Wait")
             range = self.a_continueStepForward()
             print("1: ", self.nav.checkCollision())
             if (range >= 1):
@@ -75,41 +73,44 @@ class controlManager(object):
 
     def a_performRotate(self, direction_function):
         print("a_performRotate")
-        self.b_rotateScannerToMid()
         self.b_doScan()
         direction_function
         printMap(self.nav.used_map)
 
     def b_doScan(self):
         print("b_doScan")
+        a = input("WAITING FOR ENTER")
         printMap(self.nav.used_map)
-        #range = self.scanner.analyzeImageAndReturnDist("laser.png")
-        #blocks = self.nav.scanRoom(self.nav.scan_arg(range))
+        range = self.scanner.analyzeImageAndReturnDist()
+        blocks = self.nav.scanRoom(self.nav.scan_arg(range))
         #blocks = self.nav.scanRoom(self.nav.scan_input())
-        blocks = self.nav.scanRoom(self.nav.scan_obstacleMap())
+        #blocks = self.nav.scanRoom(self.nav.scan_obstacleMap())
         printMap(self.nav.used_map)
         return blocks
 
-    def b_rotateScannerToRight(self):
-        print("b_rotateScannerToRight")
-        self.servo.max()
-        self.nav.faceRobotStraight()
-        self.nav.rotateScannerRight()
+    def a_rotateAndScanToRight(self):
+        print("b_rotateAndScanToRight")
+        self.b_rotateRight()
+        dist = self.b_doScan()
+        self.b_rotateLeft()
+        return dist
 
-    def b_rotateScannerToMid(self):
-        print("b_rotateScannerToMid")
-        self.servo.mid()
-        self.nav.faceRobotStraight()
+    def a_rotateAndScanToLeft(self):
+        print("b_rotateAndScanToLeft")
+        self.b_rotateLeft()
+        dist = self.b_doScan()
+        self.b_rotateRight()
+        return dist
 
     def a_findNearestWall(self):
         print("a_findNearestWall")
         min_range = 0
-        range_min = 100
+        nearest_wall = 9999
         min_cord = 0
         for i in range(4):
             min_range = self.b_doScan()
-            if(min_range < range_min):
-                range_min = min_range
+            if(min_range < nearest_wall):
+                nearest_wall = min_range
                 min_cord = i
             self.b_rotateRight()
         while(min_cord > 0):
@@ -131,7 +132,7 @@ class controlManager(object):
         self.a_findNearestWall()
         self.a_rideToNearestWall()
         i = 0
-        while(i < 6):
+        while(i < 10):
             if(False == self.a_performForward()):
                 self.a_performRotate(self.b_rotateLeft())
             else:
